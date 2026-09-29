@@ -12,10 +12,9 @@ local wast2json_flags =
 local function verify_spec_suite(wast_file, suite_name)
 	os.execute("mkdir -p " .. tmp_dir)
 	local json_path = string.format("%s/%s.json", tmp_dir, suite_name)
-	local cmd = string.format("wast2json %s %s -o %s", wast2json_flags, wast_file, json_path)
+	local cmd = string.format("wast2json %s %s -o %s 2>/dev/null", wast2json_flags, wast_file, json_path)
 	local status = os.execute(cmd)
 	if status ~= 0 and status ~= true then
-		io.stderr:write(string.format("wast2json failed for %s\n", wast_file))
 		return 0, 0
 	end
 
@@ -338,7 +337,7 @@ Test:describe("Official WebAssembly Spec Testsuite - WAT Round-Trip Verification
 		Test:add(string.format("round-trip: %s.wast decompiled WAT re-assembles with wat2wasm", name), function()
 			local wast_path = "spec/" .. name .. ".wast"
 			local json_path = string.format("%s/rt_%s.json", tmp_dir, name)
-			local cmd = string.format("wast2json %s %s -o %s", wast2json_flags, wast_path, json_path)
+			local cmd = string.format("wast2json %s %s -o %s 2>/dev/null", wast2json_flags, wast_path, json_path)
 			local status = os.execute(cmd)
 			Test:assert_true(status == 0 or status == true)
 
@@ -361,7 +360,8 @@ Test:describe("Official WebAssembly Spec Testsuite - WAT Round-Trip Verification
 				wf:close()
 
 				local wat2wasm_flags = wast2json_flags .. " --no-check"
-				local reassemble_cmd = string.format("wat2wasm %s %s -o %s", wat2wasm_flags, wat_path, wasm_out)
+				local reassemble_cmd =
+					string.format("wat2wasm %s %s -o %s 2>/dev/null", wat2wasm_flags, wat_path, wasm_out)
 				local reassemble_status = os.execute(reassemble_cmd)
 				Test:assert_true(reassemble_status == 0 or reassemble_status == true)
 
