@@ -1,0 +1,28 @@
+# OS and editor files
+.DS_Store
+*.swp
+*.swo
+*~
+.cache/
+.zed/
+
+# Local language-server configuration
+compile_commands.json
+compile_flags.txt
+
+# Native build products
+*.so
+*.dylib
+*.dll
+
+# Generated WebAssembly modules and build caches
+build/*
+!build/sqlite3.wasm
+!build/corpus/
+build/corpus/*
+!build/corpus/README.md
+
+# Test-generated temporary files
+tests/*.tmp
+tests/*.wasm
+tests/*.wat

@@ -1,0 +1,5 @@
+*.lua text eol=lf
+*.md text eol=lf
+*.wat text eol=lf
+*.wasm binary
+*.so binary

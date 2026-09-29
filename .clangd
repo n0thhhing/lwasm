@@ -1,0 +1,10 @@
+CompileFlags:
+  Add:
+    - -I/opt/homebrew/include/lua5.5
+    - -I/opt/homebrew/include/lua
+    - -I/opt/homebrew/include
+    - -I/usr/local/include/lua
+    - -I/usr/local/include
+    - -I/usr/include/lua
+    - -Wall
+    - -Wextra

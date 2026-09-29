@@ -1,0 +1,71 @@
+#!/usr/bin/env lua
+--- bin/lwasm - WebAssembly 2.0 CLI Tool
+local lwasm = require("lwasm")
+
+if #arg == 0 or (arg[1] == "--help" or arg[1] == "-h") and not arg[2] then
+	print("lwasm v2.0.0 - WebAssembly 2.0 Toolkit for Lua")
+	print("Usage: lwasm <file.wasm> [options]")
+	print("   or: lwasm <command> <file.wasm> [args...]")
+	print("\nCommands / Options:")
+	print("  run, --run, -x         Execute exported function from module")
+	print("  dump, --dump, -d       Generate full binary dump (default)")
+	print("  wat, --wat, -w         Decompile module to WAT assembly")
+	print("  disasm, --disasm       Print disassembly of all code sections")
+	print("  headers, --headers, -H Print only section headers table")
+	print("  --help, -h             Display this help message")
+	os.exit(0)
+end
+
+local file = nil
+local mode = "dump"
+local opts = {}
+local extra_args = {}
+
+for _, a in ipairs(arg) do
+	if a == "run" or a == "--run" then
+		mode = "run"
+	elseif a == "wat" or a == "--wat" or a == "-w" then
+		mode = "wat"
+	elseif a == "disasm" or a == "--disasm" then
+		mode = "disasm"
+	elseif a == "headers" or a == "--headers" or a == "-H" then
+		mode = "headers"
+		opts.headers_only = true
+	elseif a == "dump" or a == "--dump" or a == "-d" then
+		mode = "dump"
+	elseif a == "--raw" or a == "-r" then
+		opts.raw_data = true
+	elseif a == "--no-disasm" then
+		opts.no_disasm = true
+	elseif not file and (a:match("%.wasm$") or not a:match("^-")) then
+		file = a
+	else
+		extra_args[#extra_args + 1] = tonumber(a) or a
+	end
+end
+
+if not file then
+	io.stderr:write("Error: No .wasm file specified.\n")
+	os.exit(1)
+end
+
+if mode == "run" then
+	local func_name = nil
+	local call_args = {}
+	if #extra_args > 0 and type(extra_args[1]) == "string" and not tonumber(extra_args[1]) then
+		func_name = table.remove(extra_args, 1)
+	end
+	call_args = extra_args
+	local results = { lwasm.run(file, func_name, table.unpack(call_args)) }
+	if #results > 0 then
+		print(table.concat(results, " "))
+	end
+elseif mode == "wat" then
+	print(lwasm.to_wat(file))
+elseif mode == "disasm" then
+	print(lwasm.disasm_dump(file))
+elseif mode == "headers" then
+	print(lwasm.dump(file, opts))
+else
+	print(lwasm.dump(file, opts))
+end
