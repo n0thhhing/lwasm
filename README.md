@@ -1,5 +1,9 @@
 # lwasm
 
+[![CI](https://github.com/n0thhhing/lwasm/actions/workflows/ci.yml/badge.svg)](https://github.com/n0thhhing/lwasm/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Lua 5.4+](https://img.shields.io/badge/Lua-5.4%2B-2c2d72.svg)](https://www.lua.org/)
+
 A fast, comprehensive WebAssembly 2.0 binary decoder, disassembler, decompiler, runtime interpreter, and inspection toolkit written in pure Lua.
 
 Conforms to the **W3C WebAssembly Core 2.0 Specification** (including Typed Function References, Garbage Collection, Exception Handling, Relaxed SIMD, Multi-Memory, and Memory64).
@@ -72,7 +76,7 @@ Clone the repository with its WebAssembly specification tests, then build the
 local fixtures:
 
 ```bash
-git clone --recurse-submodules <repository-url>
+git clone --recurse-submodules https://github.com/n0thhhing/lwasm.git
 cd lwasm
 make build
 ```
